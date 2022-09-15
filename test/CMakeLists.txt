@@ -6,25 +6,16 @@ find_package(googletest REQUIRED)
 find_package(Threads REQUIRED)
 
 set(TESTS
-  cc/queue/lockfree_mpmc
-  cc/queue/lockfree_spsc
-  cc/queue/mpmc
-  cc/queue/read_from_stream
-  cc/queue/sink_spsc
-  cc/queue/source_spsc
-  cc/queue/write_to_stream
-  cc/ring/dependency_graph
-  cc/barrier
-  cc/deferred_scoped_task
-  cc/executor
-  cc/gate
-  cc/latch
-  cc/scoped_task
-  cc/sequencer
+  chrono/date
+  chrono/time_of_day
+  chrono/timepoint
   )
 
 set(TEST_LIBRARIES
-  cxx_core_cc
+  cxx_core_chrono
+  cxx_core_string::cxx_core_string
+  cxx_core_util::cxx_core_util
+  cxx_coro_stream::cxx_coro_stream
   googletest::cxx-googletest
   Threads::Threads)
 
