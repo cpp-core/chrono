@@ -12,7 +12,7 @@ endif()
 # Build the tests and set directories if this is the master project
 #
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-  set(CORE_FP_TEST ON CACHE BOOL "Generate the tests.")
+  set(CORE_CHRONO_TEST ON CACHE BOOL "Generate the tests.")
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -41,8 +41,8 @@ find_package(nlohmann_json REQUIRED)
 #
 message("-- cxx-core-chrono: Configuration: ${CMAKE_CURRENT_SOURCE_DIR}")
 message("-- cxx-core-chrono: Included from: ${CMAKE_SOURCE_DIR}")
-message("-- cxx-core-chrono: CORE_CC_TEST ${CORE_CHRONO_TEST}")
-message("-- cxx-core-chrono: CORE_CC_DOCS ${CORE_CHRONO_DOCS}")
+message("-- cxx-core-chrono: CORE_CHRONO_TEST ${CORE_CHRONO_TEST}")
+message("-- cxx-core-chrono: CORE_CHRONO_DOCS ${CORE_CHRONO_DOCS}")
 message("-- cxx-core-chrono: CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}")
 message("-- cxx-core-chrono: cxx_core_string: ${cxx_core_string_DIR}")
 message("-- cxx-core-chrono: cxx_core_util: ${cxx_core_util_DIR}")
@@ -90,7 +90,7 @@ target_include_directories(cxx_core_chrono
 
 # Optionally configure the tests
 #
-if(CORE_FP_TEST)
+if(CORE_CHRONO_TEST)
   enable_testing()
   if (NOT TARGET check)
     add_custom_target(check ${CMAKE_CTEST_COMMAND})
