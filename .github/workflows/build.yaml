@@ -58,7 +58,7 @@ jobs:
       run: |
         export CC=clang-11
         export CXX=clang++-11
-        mkdir cxx-core-fp/build && pushd cxx-core-fp/build
+        mkdir cxx-core-chrono/build && pushd cxx-core-chrono/build
         cmake -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE}/opt -DCORE_CHRONO_TEST=ON ..
         make
         make check
