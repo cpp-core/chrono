@@ -44,6 +44,9 @@ message("-- cxx-core-chrono: Included from: ${CMAKE_SOURCE_DIR}")
 message("-- cxx-core-chrono: CORE_CC_TEST ${CORE_CHRONO_TEST}")
 message("-- cxx-core-chrono: CORE_CC_DOCS ${CORE_CHRONO_DOCS}")
 message("-- cxx-core-chrono: CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}")
+message("-- cxx-core-chrono: cxx_core_string: ${cxx_core_string_DIR}")
+message("-- cxx-core-chrono: cxx_core_util: ${cxx_core_util_DIR}")
+message("-- cxx-core-chrono: cxx_coro_stream: ${cxx_coro_stream_DIR}")
 
 # Compilation
 #
