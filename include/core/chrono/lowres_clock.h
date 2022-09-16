@@ -3,11 +3,9 @@
 
 #pragma once
 #include <thread>
-#include "coro/base.h"
 #include "core/chrono/chrono.h"
 
-namespace coros
-{
+namespace core::chrono {
 
 // LowResClock provides very fast access to the current time with
 // configurable resolution (typically 1ms). This provides an

@@ -63,6 +63,7 @@ set(SOURCES
   chrono/date
   chrono/date_stream
   chrono/duration
+  chrono/lowres_clock
   chrono/time_of_day
   chrono/time_of_day_stream
   chrono/timepoint
