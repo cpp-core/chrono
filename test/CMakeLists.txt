@@ -7,6 +7,7 @@ find_package(Threads REQUIRED)
 
 set(TESTS
   chrono/date
+  chrono/lowres_clock
   chrono/time_of_day
   chrono/timepoint
   )
