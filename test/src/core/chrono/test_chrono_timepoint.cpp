@@ -19,6 +19,13 @@ auto nano_fuzzer() {
     return Sampler<std::int64_t>{}(0, (24 * 60 * 60 - 1) * 1'000'000'000ll);
 }
 
+TEST(TimePoint, fmt)
+{
+    TimePoint tp{aug/11/2009};
+    auto s = fmt::format("{}", tp);
+    EXPECT_EQ(s, "2009-08-11 00:00:00.000000000");
+}
+
 TEST(TimePoint, Epoch)
 {
     auto tp = TimePoint::epoch();

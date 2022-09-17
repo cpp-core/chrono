@@ -4,6 +4,7 @@
 #pragma once
 #include <chrono>
 #include <compare>
+#include <fmt/ostream.h>
 #include "core/chrono/date.h"
 #include "core/chrono/duration.h"
 #include "core/chrono/time_of_day.h"
@@ -122,6 +123,8 @@ template<> struct lexical_cast_impl<core::chrono::TimePoint> {
     static core::chrono::TimePoint parse(std::string_view);
 };
 }; // core::detail
+
+template <> struct fmt::formatter<chron::TimePoint> : ostream_formatter {};
 
 namespace chron {
 using namespace core::chrono;

@@ -21,6 +21,13 @@ auto nano_fuzzer() {
     return sampler<std::int64_t>(0, (24 * 60 * 60 - 1) * 1'000'000'000ll);
 }
 
+TEST(Date, fmt)
+{
+    Date date = aug/11/2009;
+    auto s = fmt::format("{}", date);
+    EXPECT_EQ(s, "2009-08-11");
+}
+
 TEST(Date, Min)
 {
     auto date = Date::min();

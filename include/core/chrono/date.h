@@ -154,7 +154,7 @@ using namespace core::chrono::literals;
 };
 
 template <>
-struct fmt::formatter<core::chrono::Date> {
+struct fmt::formatter<chron::Date> {
     // Presentation format: 'F' - YYYY-MM-DD.
     char presentation = 'F';
 
