@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.22 FATAL_ERROR)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin)
 
-find_package(googletest REQUIRED)
+find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
 set(TESTS
@@ -13,11 +13,11 @@ set(TESTS
   )
 
 set(TEST_LIBRARIES
-  cxx_core_chrono
-  cxx_core_string::cxx_core_string
-  cxx_core_util::cxx_core_util
-  cxx_coro_stream::cxx_coro_stream
-  googletest::cxx-googletest
+  chrono
+  string::string
+  util::util
+  stream::stream
+  GTest::gtest
   Threads::Threads)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/configure_tests.cmake)
