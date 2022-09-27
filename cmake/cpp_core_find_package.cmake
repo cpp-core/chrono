@@ -44,7 +44,7 @@ function(cpp_core_find_package NAME)
     FIND_PACKAGE_ARGS
     )
 
-  find_package(${NAME} QUIET)
+#  find_package(${NAME} QUIET)
   
   if (TARGET ${NAME} OR TARGET ${NAME}::${NAME})
     message(FATAL_ERROR "-- cpp_core_find_package: unexpectedly found ${NAME}")
