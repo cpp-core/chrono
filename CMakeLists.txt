@@ -83,7 +83,7 @@ endforeach()
 
 add_library(chrono ${FILES})
 add_library(chrono::chrono ALIAS chrono)
-target_link_libraries(chrono PUBLIC util::util date::date-tz nlohmann_json::nlohmann_json)
+target_link_libraries(chrono PUBLIC util::util date::date-tz)
 
 # Define the header files for this library.
 #
@@ -107,4 +107,3 @@ endif()
 #
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/install_config.cmake)
 install_config(chrono)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/core/chrono DESTINATION include/core)
