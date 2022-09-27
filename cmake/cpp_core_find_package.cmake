@@ -1,6 +1,11 @@
 cmake_minimum_required (VERSION 3.24 FATAL_ERROR)
 
 function(cpp_core_find_package NAME)
+  if (TARGET ${NAME} OR TARGET ${NAME}::${NAME})
+    message("-- cpp_core_find_package: ${NAME} already included")
+    return()
+  endif()
+  
   cmake_parse_arguments(CCFP
     "EXCLUDE_FROM_ALL" # options
     "URL;VERSION" # single-value arguments
@@ -42,11 +47,17 @@ function(cpp_core_find_package NAME)
   find_package(${NAME} QUIET)
   
   if (TARGET ${NAME} OR TARGET ${NAME}::${NAME})
+    message(FATAL_ERROR "-- cpp_core_find_package: unexpectedly found ${NAME}")
     return()
   endif()
 
   FetchContent_GetProperties(${NAME})
   string(TOLOWER "${NAME}" lc_name)
+
+  if (${lc_name}_POPULATED)
+    message(FATAL_ERROR "-- cpp_core_find_package: ${NAME} unexpectedly populated")
+    return()
+  endif()
   
   if (NOT ${lc_name}_POPULATED)
     FetchContent_Populate(${NAME})
