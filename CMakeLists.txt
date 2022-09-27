@@ -60,8 +60,8 @@ add_link_options(-stdlib=libc++)
 include(cmake/cpp_core_find_package.cmake)
 cpp_core_find_package(util)
 
-set(USE_SYSTEM_TZ_DB ON)
-set(BUILD_TZ_LIB ON)
+set(USE_SYSTEM_TZ_DB ON CACHE INTERNAL "")
+set(BUILD_TZ_LIB ON CACHE INTERNAL "")
 cpp_core_find_package(date VERSION v3.0.1)
 
 # Build the library
