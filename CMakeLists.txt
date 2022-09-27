@@ -82,6 +82,7 @@ foreach(NAME ${SOURCES})
 endforeach()
 
 add_library(chrono ${FILES})
+add_library(chrono::chrono ALIAS chrono)
 target_link_libraries(chrono PUBLIC util::util date::date-tz nlohmann_json::nlohmann_json)
 
 # Define the header files for this library.
