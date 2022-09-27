@@ -3,7 +3,7 @@ project (chrono VERSION 0.1 LANGUAGES C CXX)
 
 # Make including this file idempotent
 #
-if(TARGET chrono)
+if(TARGET chrono OR TARGET chrono::chrono)
   return()
 endif()
 
@@ -18,24 +18,20 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
   set(CMAKE_DOCS_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/docs)
   
-  # Have cmake output the compilation commands
+  # Have cmake output the compilation commands and create a link to it
+  # from the project root directory so the language server can find
+  # it.
+  #
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+  execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
+    ${CMAKE_BINARY_DIR}/compile_commands.json
+    ${CMAKE_SOURCE_DIR}/compile_commands.json)
 endif()
 
 # Options for generating tests and documentation.
 #
 option(CHRONO_TEST "Generate the tests." OFF)
 option(CHRONO_DOCS "Generate the docs." OFF)
-
-# Add our dependencies
-#
-include(GNUInstallDirs)
-find_package(string REQUIRED)
-find_package(util REQUIRED)
-find_package(stream REQUIRED)
-find_package(date REQUIRED)
-find_package(fmt REQUIRED)
-find_package(nlohmann_json REQUIRED)
 
 # Output configuration
 #
@@ -48,7 +44,7 @@ message("-- chrono: string: ${string_DIR}")
 message("-- chrono: util: ${util_DIR}")
 message("-- chrono: stream: ${stream_DIR}")
 
-# Compilation
+# Setup compilation before adding dependencies
 #
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -59,6 +55,17 @@ add_compile_options(-stdlib=libc++)
 add_compile_options(-O)
 add_link_options(-stdlib=libc++)
 
+# Add our dependencies
+#
+include(cmake/cpp_core_find_package.cmake)
+cpp_core_find_package(util)
+
+set(USE_SYSTEM_TZ_DB ON)
+set(BUILD_TZ_LIB ON)
+cpp_core_find_package(date VERSION v3.0.1)
+
+# Build the library
+#
 set(SOURCES
   chrono/date
   chrono/date_stream
@@ -75,28 +82,17 @@ foreach(NAME ${SOURCES})
 endforeach()
 
 add_library(chrono ${FILES})
+target_link_libraries(chrono PUBLIC util::util date::date-tz nlohmann_json::nlohmann_json)
 
-set(LIBRARIES
-  stream::stream
-  date::date-tz
-  fmt::fmt
-  nlohmann_json::nlohmann_json)
-
-target_link_libraries(chrono PUBLIC ${LIBRARIES})
-
-target_include_directories(chrono
-  PRIVATE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+# Define the header files for this library.
+#
+file(GLOB_RECURSE PUBLIC_INCLUDE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/*.h)
+target_sources(chrono PUBLIC FILE_SET HEADERS BASE_DIRS include FILES ${PUBLIC_INCLUDE_FILES})
 
 # Optionally configure the tests
 #
 if(CHRONO_TEST)
   enable_testing()
-  if (NOT TARGET check)
-    add_custom_target(check ${CMAKE_CTEST_COMMAND})
-    add_custom_target(check_detail ${CMAKE_CTEST_COMMAND} -V)
-  endif()
   add_subdirectory(test)
 endif()
 
