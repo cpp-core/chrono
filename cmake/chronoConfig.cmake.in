@@ -5,6 +5,5 @@ check_required_components("@PROJECT_NAME@")
 
 include(CMakeFindDependencyMacro)
 find_dependency(stream)
+find_dependency(util)
 find_dependency(date)
-find_dependency(fmt)
-find_dependency(nlohmann_json)
