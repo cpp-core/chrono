@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.22 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.24 FATAL_ERROR)
 project (chrono VERSION 0.1 LANGUAGES C CXX)
 
 # Make including this file idempotent
@@ -7,42 +7,44 @@ if(TARGET chrono OR TARGET chrono::chrono)
   return()
 endif()
 
-# Configuration variables.
-#
-# Build the tests and set directories if this is the master project
-#
-if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-  set(CHRONO_TEST ON CACHE BOOL "Generate the tests.")
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-  set(CMAKE_DOCS_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/docs)
-  
-  # Have cmake output the compilation commands and create a link to it
-  # from the project root directory so the language server can find
-  # it.
-  #
-  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-  execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
-    ${CMAKE_BINARY_DIR}/compile_commands.json
-    ${CMAKE_SOURCE_DIR}/compile_commands.json)
-endif()
-
 # Options for generating tests and documentation.
 #
 option(CHRONO_TEST "Generate the tests." OFF)
 option(CHRONO_DOCS "Generate the docs." OFF)
 
+# If this is the current project.
+#
+if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
+  # Include the cmake helpers
+  #
+  include(${CPP_CORE_SOURCE_DIR}/projects/cmake/utils/all.cmake)
+  include(${CPP_CORE_SOURCE_DIR}/projects/cmake/recipes/all.cmake)
+  
+  # Geneerte the tests
+  #
+  set(CHRONO_TEST ON CACHE BOOL "Generate the tests." FORCE)
+
+  # compile_commands.json
+  #
+  symlink_compile_commands()
+
+  # Convenience targets for git operations
+  #
+  make_submodule_pull_target()
+endif()
+
+# Put executables in the top-level binary directory
+#
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+
 # Output configuration
 #
 message("-- chrono: Configuration: ${CMAKE_CURRENT_SOURCE_DIR}")
 message("-- chrono: Included from: ${CMAKE_SOURCE_DIR}")
-message("-- chrono: CHRONO_TEST ${CHRONO_TEST}")
-message("-- chrono: CHRONO_DOCS ${CHRONO_DOCS}")
-message("-- chrono: CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}")
-message("-- chrono: string: ${string_DIR}")
-message("-- chrono: util: ${util_DIR}")
-message("-- chrono: stream: ${stream_DIR}")
+message("-- chrono: Install prefix: ${CMAKE_INSTALL_PREFIX}")
+message("-- chrono: test ${CHRONO_TEST}")
+message("-- chrono: docs ${CHRONO_DOCS}")
 
 # Setup compilation before adding dependencies
 #
@@ -57,12 +59,8 @@ add_link_options(-stdlib=libc++)
 
 # Add our dependencies
 #
-include(cmake/cpp_core_find_package.cmake)
-cpp_core_find_package(util)
-
-set(USE_SYSTEM_TZ_DB ON CACHE INTERNAL "")
-set(BUILD_TZ_LIB ON CACHE INTERNAL "")
-cpp_core_find_package(date VERSION v3.0.1)
+add_util()
+add_date()
 
 # Build the library
 #
@@ -93,7 +91,7 @@ target_sources(chrono PUBLIC FILE_SET HEADERS BASE_DIRS include FILES ${PUBLIC_I
 # Optionally configure the tests
 #
 if(CHRONO_TEST)
-  enable_testing()
+  add_gtest()
   add_subdirectory(test)
 endif()
 
@@ -105,5 +103,4 @@ endif()
 
 # Installation
 #
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/install_config.cmake)
 install_config(chrono)
