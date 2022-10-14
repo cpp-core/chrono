@@ -124,7 +124,7 @@ template<> struct lexical_cast_impl<core::chrono::TimePoint> {
 };
 }; // core::detail
 
-template <> struct fmt::formatter<chron::TimePoint> : ostream_formatter {};
+// template <> struct fmt::formatter<chron::TimePoint> : ostream_formatter {};
 
 namespace chron {
 using namespace core::chrono;
