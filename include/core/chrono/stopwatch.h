@@ -37,6 +37,13 @@ public:
     }
 
     template<class Units = typename Clock::duration>
+    auto elapsed_duration()
+    {
+	auto elapsed = mark();
+	return std::chrono::duration_cast<Units>(elapsed);
+    }
+    
+    template<class Units = typename Clock::duration>
     auto elapsed_time()
     {
 	auto elapsed = mark();
